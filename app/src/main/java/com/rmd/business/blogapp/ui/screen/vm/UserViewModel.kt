@@ -48,9 +48,7 @@ class UserViewModel @Inject constructor(
 
                     is Result.Error -> {
                         uiState.value = uiState.value.copy(
-                            isLoading = false,
-                            currentUser = null,
-                            signinError = result.e?.message
+                            isLoading = false, currentUser = null, signinError = result.e?.message
                         )
                     }
                 }
@@ -86,8 +84,7 @@ class UserViewModel @Inject constructor(
 
     fun resetSignInState() {
         uiState.value = uiState.value.copy(
-            isSignInSuccessfull = false,
-            signinError = null
+            isSignInSuccessfull = false, signinError = null
         )
     }
 }
