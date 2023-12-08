@@ -21,7 +21,7 @@ object UserModule {
 
     @Provides
     fun providesGoogleAuthSignInClient(
-        signInClient: SignInClient, @ApplicationContext context: Context
+        signInClient: SignInClient
     ): GoogleAuthUiHelper {
         return GoogleAuthUiHelper(signInClient)
     }

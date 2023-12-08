@@ -3,9 +3,7 @@ package com.rmd.business.blogapp.data.repository
 
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.StorageReference
 import com.rmd.business.blogapp.domain.model.User
 import com.rmd.business.blogapp.ui.utils.Result
 import kotlinx.coroutines.flow.catch
@@ -13,10 +11,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class UserRepository @Inject constructor(
-    private val blogsRef: CollectionReference,
-    private val storageRef: StorageReference
-) {
+class UserRepository @Inject constructor() {
     suspend fun signOut(oneTapClient: SignInClient) = flow {
         emit(Result.Loading)
         oneTapClient.signOut().await()

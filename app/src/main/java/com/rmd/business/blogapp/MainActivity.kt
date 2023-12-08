@@ -17,12 +17,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.identity.SignInClient
+import com.rmd.business.blogapp.ui.screen.HomeScreen
 import com.rmd.business.blogapp.ui.screen.SignInScreen
 import com.rmd.business.blogapp.ui.screen.vm.UserViewModel
 import com.rmd.business.blogapp.ui.theme.BlogAppTheme
 import com.rmd.business.blogapp.ui.utils.GoogleAuthUiHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -50,7 +52,8 @@ class MainActivity : ComponentActivity() {
                     NavHost(navController = navController, startDestination = "signIn") {
                         composable("signIn") {
                             val launcher =
-                                rememberLauncherForActivityResult(contract = ActivityResultContracts.StartIntentSenderForResult(),
+                                rememberLauncherForActivityResult(
+                                    contract = ActivityResultContracts.StartIntentSenderForResult(),
                                     onResult = { result ->
                                         if (result.resultCode == RESULT_OK) {
                                             lifecycleScope.launch {
@@ -88,6 +91,32 @@ class MainActivity : ComponentActivity() {
                                             ).build()
                                         )
                                     }
+                                })
+                        }
+                        composable("home") {
+                            HomeScreen(
+                                currentUser = uiState.currentUser,
+                                blogs = uiState.blogs,
+                                isLoading = uiState.isLoading,
+                                onSignOut = {
+                                    userViewModel.signOut(oneTapClient)
+                                },
+                                onNavigateToBlogDetailsScreen = { blog ->
+                                    val encodedUrl = URLEncoder.encode(blog.thumbnail, "UTF-8")
+                                    navController.navigate(
+                                        "blog_details?id=${blog.id}?title=${blog.title}" +
+                                                "?content=${blog.content}" +
+                                                "?username=${uiState.currentUser?.username}" +
+                                                "?thumbnail=$encodedUrl"
+                                    )
+                                },
+                                onNavigateToUpdateBlogScreen = {
+                                    navController.navigate("blog_update")
+                                },
+                                onNavigateToSignInScreen = {
+                                    navController.popBackStack(
+                                        route = "signIn", inclusive = false
+                                    )
                                 }
                             )
                         }
